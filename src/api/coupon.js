@@ -12,6 +12,8 @@ const mockCoupons = [
     endTime: '2024-12-31 23:59:59',
     status: 1,
     weight: 10,
+    projectId: 1,
+    projectName: '万达广场',
     mainImage: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
     contentImages: [
       'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
@@ -29,14 +31,36 @@ const mockCoupons = [
     minAmount: 0,
     quantity: 500,
     usedQuantity: 150,
-    startTime: '2024-01-01 00:00:00',
-    endTime: '2024-06-30 23:59:59',
+    startTime: '2026-01-01 00:00:00',
+    endTime: '2026-12-31 23:59:59',
     status: 1,
     weight: 5,
+    projectId: 2,
+    projectName: '银泰中心',
     mainImage: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
     contentImages: [],
     description: '会员专享8折优惠券，无门槛使用。',
-    createTime: '2024-01-02 14:30:00'
+    createTime: '2026-01-02 14:30:00'
+  },
+  {
+    id: 4,
+    name: '限时特惠折扣券',
+    code: 'SALE20',
+    type: 2,
+    value: 9,
+    minAmount: 100,
+    quantity: 1000,
+    usedQuantity: 50,
+    startTime: '2026-04-01 00:00:00',
+    endTime: '2026-06-30 23:59:59',
+    status: 1,
+    weight: 8,
+    projectId: 1,
+    projectName: '万达广场',
+    mainImage: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
+    contentImages: [],
+    description: '限时特惠9折优惠券，满100元可用。',
+    createTime: '2026-03-15 10:00:00'
   },
   {
     id: 3,
@@ -51,6 +75,8 @@ const mockCoupons = [
     endTime: '2024-03-01 23:59:59',
     status: 0,
     weight: 8,
+    projectId: null,
+    projectName: '',
     mainImage: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
     contentImages: [],
     description: '满500减100，限时优惠。',
@@ -59,7 +85,7 @@ const mockCoupons = [
 ]
 
 let coupons = [...mockCoupons]
-let nextId = 4
+let nextId = 5
 
 export const getCouponList = (params) => {
   return new Promise((resolve) => {
@@ -75,6 +101,13 @@ export const getCouponList = (params) => {
       if (params.status !== undefined && params.status !== '') {
         filteredList = filteredList.filter(item => 
           item.status === Number(params.status)
+        )
+      }
+      
+      if (params.projectIds && params.projectIds.length > 0) {
+        const projectIds = params.projectIds.map(Number)
+        filteredList = filteredList.filter(item => 
+          projectIds.includes(item.projectId)
         )
       }
       
@@ -235,5 +268,32 @@ export const uploadImage = (file) => {
         message: '上传成功'
       })
     }, 1000)
+  })
+}
+
+const isCouponActive = (coupon) => {
+  if (coupon.type !== 2 || coupon.status !== 1) {
+    return false
+  }
+  
+  const now = new Date()
+  const startTime = new Date(coupon.startTime.replace(/-/g, '/'))
+  const endTime = new Date(coupon.endTime.replace(/-/g, '/'))
+  
+  return now >= startTime && now <= endTime
+}
+
+export const getDiscountCouponList = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const discountCoupons = coupons.filter(item => isCouponActive(item))
+      resolve({
+        code: 200,
+        data: {
+          list: discountCoupons
+        },
+        message: 'success'
+      })
+    }, 300)
   })
 }

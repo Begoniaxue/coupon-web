@@ -1,5 +1,5 @@
 <template>
-  <div class="coupon-form">
+  <div class="flash-sale-form">
     <el-card>
       <template #header>
         <div class="card-header">
@@ -7,7 +7,7 @@
             <el-icon><ArrowLeft /></el-icon>
             返回列表
           </el-button>
-          <span>{{ isEdit ? '编辑卡券' : '创建卡券' }}</span>
+          <span>{{ isEdit ? '编辑秒杀活动' : '创建秒杀活动' }}</span>
           <div></div>
         </div>
       </template>
@@ -56,89 +56,6 @@
           </div>
         </el-form-item>
 
-        <el-form-item label="卡券名称" prop="name">
-          <el-input
-            v-model="formData.name"
-            placeholder="请输入卡券名称"
-            maxlength="50"
-            show-word-limit
-          />
-        </el-form-item>
-
-        <el-form-item label="卡券编码" prop="code">
-          <el-input
-            v-model="formData.code"
-            placeholder="请输入卡券编码（自动生成也可自定义）"
-            maxlength="32"
-          />
-        </el-form-item>
-
-        <el-form-item label="卡券类型" prop="type">
-          <el-radio-group v-model="formData.type">
-            <el-radio :value="1">满减券</el-radio>
-            <el-radio :value="2">折扣券</el-radio>
-          </el-radio-group>
-        </el-form-item>
-
-        <el-form-item label="面值" prop="value">
-          <el-input-number
-            v-model="formData.value"
-            :min="1"
-            :max="formData.type === 2 ? 9 : 10000"
-            :precision="formData.type === 2 ? 1 : 0"
-            style="width: 200px"
-          />
-          <span v-if="formData.type === 1" class="unit">元</span>
-          <span v-else class="unit">折</span>
-        </el-form-item>
-
-        <el-form-item label="使用门槛" prop="minAmount">
-          <el-input-number
-            v-model="formData.minAmount"
-            :min="0"
-            :max="100000"
-            style="width: 200px"
-          />
-          <span class="unit">元（0表示无门槛）</span>
-        </el-form-item>
-
-        <el-form-item label="发放数量" prop="quantity">
-          <el-input-number
-            v-model="formData.quantity"
-            :min="1"
-            :max="1000000"
-            style="width: 200px"
-          />
-          <span class="unit">张</span>
-        </el-form-item>
-
-        <el-form-item label="权重" prop="weight">
-          <el-input-number
-            v-model="formData.weight"
-            :min="0"
-            :max="100"
-            style="width: 200px"
-          />
-          <span class="unit">（数值越大优先级越高）</span>
-        </el-form-item>
-
-        <el-divider content-position="left">时间设置</el-divider>
-
-        <el-form-item label="有效期" prop="timeRange">
-          <el-date-picker
-            v-model="formData.timeRange"
-            type="datetimerange"
-            range-separator="至"
-            start-placeholder="开始日期时间"
-            end-placeholder="结束日期时间"
-            format="YYYY-MM-DD HH:mm:ss"
-            value-format="YYYY-MM-DD HH:mm:ss"
-            style="width: 400px"
-          />
-        </el-form-item>
-
-        <el-divider content-position="left">图片设置</el-divider>
-
         <el-form-item label="主图" prop="mainImage">
           <el-upload
             class="main-image-uploader"
@@ -159,7 +76,6 @@
             </template>
           </el-upload>
           
-          <!-- 主图预览 -->
           <el-image-viewer
             v-if="mainImageViewerVisible"
             :url-list="mainImagePreviewList"
@@ -168,46 +84,80 @@
           />
         </el-form-item>
 
-        <el-form-item label="内容图片">
-          <el-upload
-            class="content-images-uploader"
-            action="#"
-            :auto-upload="false"
-            :on-change="handleContentImagesChange"
-            :on-remove="handleContentImagesRemove"
-            :on-preview="handleContentImagePreview"
-            :limit="9"
-            list-type="picture-card"
-            :file-list="contentImageFileList"
-          >
-            <el-icon><Plus /></el-icon>
-            <template #tip>
-              <div class="el-upload__tip">
-                最多上传9张图片，建议宽度 750 像素
-              </div>
-            </template>
-          </el-upload>
-          
-          <!-- 内容图片预览 -->
-          <el-image-viewer
-            v-if="contentImageViewerVisible"
-            :url-list="contentImagePreviewList"
-            :initial-index="contentImagePreviewIndex"
-            @close="contentImageViewerVisible = false"
+        <el-form-item label="活动标题" prop="title">
+          <el-input
+            v-model="formData.title"
+            placeholder="请输入活动标题"
+            maxlength="50"
+            show-word-limit
           />
         </el-form-item>
 
-        <el-divider content-position="left">文案设置</el-divider>
-
-        <el-form-item label="卡券描述" prop="description">
+        <el-form-item label="活动副标题" prop="subtitle">
           <el-input
-            v-model="formData.description"
-            type="textarea"
-            :rows="4"
-            placeholder="请输入卡券使用说明、注意事项等详细描述"
-            maxlength="500"
+            v-model="formData.subtitle"
+            placeholder="请输入活动副标题"
+            maxlength="100"
             show-word-limit
           />
+        </el-form-item>
+
+        <el-form-item label="活动内容" prop="content">
+          <el-input
+            v-model="formData.content"
+            type="textarea"
+            :rows="6"
+            placeholder="请输入活动内容（支持HTML富文本）"
+          />
+          <div class="form-tip">支持HTML标签，如：&lt;p&gt;、&lt;ul&gt;、&lt;li&gt;、&lt;strong&gt; 等</div>
+        </el-form-item>
+
+        <el-divider content-position="left">关联卡券</el-divider>
+
+        <el-form-item label="关联卡券" prop="couponId">
+          <el-select
+            v-if="discountCoupons.length > 0 || isEdit"
+            v-model="formData.couponId"
+            placeholder="请选择关联卡券（仅可选择折扣类型卡券）"
+            style="width: 300px"
+            :disabled="isEdit"
+          >
+            <el-option
+              v-for="item in discountCoupons"
+              :key="item.id"
+              :label="`${item.name} - ${item.value}折`"
+              :value="item.id"
+            >
+              <div class="coupon-option">
+                <span class="coupon-name">{{ item.name }}</span>
+                <el-tag type="warning" size="small">{{ item.value }}折</el-tag>
+              </div>
+            </el-option>
+          </el-select>
+          <div v-else class="no-coupon-tip">
+            <el-icon color="#e6a23c"><Warning /></el-icon>
+            <span>暂无可用的折扣卡券，请先创建生效中的折扣卡券</span>
+          </div>
+          <div v-if="isEdit" class="form-tip">活动创建后不可修改关联卡券</div>
+          <div v-else-if="discountCoupons.length > 0" class="form-tip">仅可选择当前生效中的折扣类型卡券</div>
+        </el-form-item>
+
+        <el-divider content-position="left">活动时间</el-divider>
+
+        <el-form-item label="活动时间" prop="timeRange">
+          <el-date-picker
+            v-model="formData.timeRange"
+            type="datetimerange"
+            range-separator="至"
+            start-placeholder="开始日期时间"
+            end-placeholder="结束日期时间"
+            format="YYYY-MM-DD HH:mm:ss"
+            value-format="YYYY-MM-DD HH:mm:ss"
+            :disabled-date="disabledDate"
+            :shortcuts="timeShortcuts"
+            style="width: 400px"
+          />
+          <div class="form-tip">活动时间最小1天，最大7天</div>
         </el-form-item>
 
         <el-divider></el-divider>
@@ -225,23 +175,26 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useFlashSaleStore } from '@/stores/flashSale'
 import { useCouponStore } from '@/stores/coupon'
 import { useProjectStore } from '@/stores/project'
-import { uploadImage } from '@/api/coupon'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { sanitizeHtml, isSafeHtml } from '@/utils/security'
 
 const route = useRoute()
 const router = useRouter()
+const flashSaleStore = useFlashSaleStore()
 const couponStore = useCouponStore()
 const projectStore = useProjectStore()
 
 const formRef = ref(null)
 const submitLoading = ref(false)
+const discountCoupons = ref([])
 
 const isEdit = computed(() => {
-  return route.name === 'CouponEdit' && route.params.id
+  return route.name === 'FlashSaleEdit' && route.params.id
 })
 
 const defaultProjectName = computed(() => {
@@ -261,65 +214,104 @@ const defaultProjectCity = computed(() => {
 })
 
 const formData = reactive({
-  name: '',
-  code: '',
-  type: 1,
-  value: 10,
-  minAmount: 0,
-  quantity: 100,
-  weight: 0,
+  title: '',
+  subtitle: '',
+  mainImage: '',
+  content: '',
+  couponId: null,
+  couponName: '',
   timeRange: [],
   startTime: '',
   endTime: '',
-  mainImage: '',
-  contentImages: [],
-  description: '',
-  status: 0,
   projectId: null,
   projectName: ''
 })
 
+const validateTimeRange = (rule, value, callback) => {
+  if (!value || value.length !== 2) {
+    callback(new Error('请选择活动时间'))
+    return
+  }
+  
+  const startTime = new Date(value[0].replace(/-/g, '/'))
+  const endTime = new Date(value[1].replace(/-/g, '/'))
+  const now = new Date()
+  
+  if (startTime < now) {
+    callback(new Error('开始时间不能早于当前时间'))
+    return
+  }
+  
+  const diffMs = endTime - startTime
+  const diffDays = diffMs / (1000 * 60 * 60 * 24)
+  
+  if (diffDays < 1) {
+    callback(new Error('活动时间不能少于1天'))
+    return
+  }
+  
+  if (diffDays > 7) {
+    callback(new Error('活动时间不能超过7天'))
+    return
+  }
+  
+  callback()
+}
+
 const rules = {
-  name: [
-    { required: true, message: '请输入卡券名称', trigger: 'blur' },
+  title: [
+    { required: true, message: '请输入活动标题', trigger: 'blur' },
     { min: 2, max: 50, message: '长度在 2 到 50 个字符', trigger: 'blur' }
-  ],
-  code: [
-    { required: true, message: '请输入卡券编码', trigger: 'blur' },
-    { min: 2, max: 32, message: '长度在 2 到 32 个字符', trigger: 'blur' }
-  ],
-  type: [
-    { required: true, message: '请选择卡券类型', trigger: 'change' }
-  ],
-  value: [
-    { required: true, message: '请输入面值', trigger: 'blur' }
-  ],
-  quantity: [
-    { required: true, message: '请输入发放数量', trigger: 'blur' }
-  ],
-  timeRange: [
-    { required: true, message: '请选择有效期', trigger: 'change' }
   ],
   mainImage: [
     { required: true, message: '请上传主图', trigger: 'change' }
+  ],
+  couponId: [
+    { required: true, message: '请选择关联卡券', trigger: 'change' }
+  ],
+  timeRange: [
+    { required: true, validator: validateTimeRange, trigger: 'change' }
   ],
   projectId: [
     { required: true, message: '请选择关联项目', trigger: 'change' }
   ]
 }
 
-const contentImageFileList = ref([])
 const mainImageFileList = ref([])
 const mainImageViewerVisible = ref(false)
 const mainImagePreviewList = ref([])
-const contentImageViewerVisible = ref(false)
-const contentImagePreviewList = ref([])
-const contentImagePreviewIndex = ref(0)
 
-const generateCode = () => {
-  const timestamp = Date.now().toString()
-  const random = Math.random().toString(36).substring(2, 8).toUpperCase()
-  return `COUPON${timestamp.slice(-6)}${random}`
+const timeShortcuts = [
+  {
+    text: '1天',
+    value: () => {
+      const now = new Date()
+      const end = new Date(now.getTime() + 24 * 60 * 60 * 1000)
+      return [now, end]
+    }
+  },
+  {
+    text: '3天',
+    value: () => {
+      const now = new Date()
+      const end = new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000)
+      return [now, end]
+    }
+  },
+  {
+    text: '7天',
+    value: () => {
+      const now = new Date()
+      const end = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000)
+      return [now, end]
+    }
+  }
+]
+
+const disabledDate = (time) => {
+  const yesterday = new Date()
+  yesterday.setDate(yesterday.getDate() - 1)
+  return time.getTime() < yesterday.getTime()
 }
 
 const handleMainImageChange = (file, fileList) => {
@@ -355,47 +347,12 @@ const handleMainImagePreview = (file) => {
   }
 }
 
-const handleContentImagesChange = (file, fileList) => {
-  const isImage = file.raw.type.includes('image')
-  if (!isImage) {
-    ElMessage.error('只能上传图片文件!')
-    return false
-  }
-  const isLt2M = file.size / 1024 / 1024 < 5
-  if (!isLt2M) {
-    ElMessage.error('图片大小不能超过 5MB!')
-    return false
-  }
-  
-  const reader = new FileReader()
-  reader.onload = (e) => {
-    file.url = e.target.result
-    if (!formData.contentImages.includes(e.target.result)) {
-      formData.contentImages.push(e.target.result)
-    }
-    contentImageFileList.value = fileList.map((item, index) => ({
-      ...item,
-      url: item.url || formData.contentImages[index]
-    }))
-  }
-  reader.readAsDataURL(file.raw)
-}
-
-const handleContentImagesRemove = (file, fileList) => {
-  const index = formData.contentImages.indexOf(file.url)
-  if (index !== -1) {
-    formData.contentImages.splice(index, 1)
-  }
-  contentImageFileList.value = fileList
-}
-
-const handleContentImagePreview = (file) => {
-  if (file.url) {
-    const urlList = contentImageFileList.value.map(item => item.url).filter(Boolean)
-    const index = urlList.indexOf(file.url)
-    contentImagePreviewList.value = urlList
-    contentImagePreviewIndex.value = index >= 0 ? index : 0
-    contentImageViewerVisible.value = true
+const loadDiscountCoupons = async () => {
+  try {
+    const list = await couponStore.fetchDiscountCouponList()
+    discountCoupons.value = list
+  } catch (error) {
+    ElMessage.error('加载折扣卡券列表失败')
   }
 }
 
@@ -403,7 +360,7 @@ const handleSubmit = () => {
   formRef.value.validate((valid) => {
     if (valid) {
       ElMessageBox.confirm(
-        isEdit.value ? '确定要修改卡券信息吗？' : '确定要创建卡券吗？',
+        isEdit.value ? '确定要修改秒杀活动吗？' : '确定要创建秒杀活动吗？',
         '提示',
         {
           confirmButtonText: '确定',
@@ -420,35 +377,35 @@ const handleSubmit = () => {
 
 const submitForm = async () => {
   try {
+    if (formData.content && !isSafeHtml(formData.content)) {
+      ElMessage.warning('活动内容包含不安全的HTML标签，已自动过滤')
+    }
+
+    const selectedCoupon = discountCoupons.value.find(item => item.id === formData.couponId)
     const selectedProject = projectStore.allProjects.find(item => item.id === formData.projectId)
     
     const submitData = {
-      name: formData.name,
-      code: formData.code,
-      type: formData.type,
-      value: formData.value,
-      minAmount: formData.minAmount,
-      quantity: formData.quantity,
-      weight: formData.weight,
-      startTime: formData.timeRange[0],
-      endTime: formData.timeRange[1],
+      title: formData.title,
+      subtitle: formData.subtitle,
       mainImage: formData.mainImage,
-      contentImages: formData.contentImages,
-      description: formData.description,
-      status: formData.status,
+      content: sanitizeHtml(formData.content),
+      couponId: formData.couponId,
+      couponName: selectedCoupon ? selectedCoupon.name : formData.couponName,
       projectId: formData.projectId,
-      projectName: selectedProject ? selectedProject.name : formData.projectName
+      projectName: selectedProject ? selectedProject.name : formData.projectName,
+      startTime: formData.timeRange[0],
+      endTime: formData.timeRange[1]
     }
 
     if (isEdit.value) {
-      await couponStore.editCoupon(route.params.id, submitData)
+      await flashSaleStore.editFlashSale(route.params.id, submitData)
       ElMessage.success('修改成功')
     } else {
-      await couponStore.addCoupon(submitData)
+      await flashSaleStore.addFlashSale(submitData)
       ElMessage.success('创建成功')
     }
     
-    router.push('/')
+    router.push('/flash-sale')
   } catch (error) {
     ElMessage.error(error.message || '操作失败')
   } finally {
@@ -460,23 +417,19 @@ const handleReset = () => {
   formRef.value.resetFields()
   formData.mainImage = ''
   mainImageFileList.value = []
-  formData.contentImages = []
-  contentImageFileList.value = []
-  formData.code = generateCode()
+  formData.timeRange = []
 }
 
 const handleBack = () => {
-  router.push('/')
+  router.push('/flash-sale')
 }
 
 const loadProjects = async () => {
   await projectStore.fetchAllProjects()
 }
 
-const loadCouponData = async () => {
+const loadFlashSaleData = async () => {
   if (!isEdit.value) {
-    formData.code = generateCode()
-    
     if (route.query.projectId) {
       const projectId = Number(route.query.projectId)
       if (projectStore.allProjects.length === 0) {
@@ -492,21 +445,16 @@ const loadCouponData = async () => {
   }
 
   try {
-    const data = await couponStore.fetchCouponDetail(route.params.id)
-    formData.name = data.name
-    formData.code = data.code
-    formData.type = data.type
-    formData.value = data.value
-    formData.minAmount = data.minAmount
-    formData.quantity = data.quantity
-    formData.weight = data.weight
-    formData.timeRange = [data.startTime, data.endTime]
+    const data = await flashSaleStore.fetchFlashSaleDetail(route.params.id)
+    formData.title = data.title
+    formData.subtitle = data.subtitle
     formData.mainImage = data.mainImage
-    formData.contentImages = data.contentImages || []
-    formData.description = data.description
-    formData.status = data.status
+    formData.content = data.content
+    formData.couponId = data.couponId
+    formData.couponName = data.couponName
     formData.projectId = data.projectId
     formData.projectName = data.projectName
+    formData.timeRange = [data.startTime, data.endTime]
 
     if (data.mainImage) {
       mainImageFileList.value = [{
@@ -514,26 +462,20 @@ const loadCouponData = async () => {
         url: data.mainImage
       }]
     }
-
-    if (formData.contentImages.length > 0) {
-      contentImageFileList.value = formData.contentImages.map((url, index) => ({
-        name: `image-${index}`,
-        url: url
-      }))
-    }
   } catch (error) {
-    ElMessage.error('加载卡券信息失败')
-    router.push('/')
+    ElMessage.error('加载秒杀活动信息失败')
+    router.push('/flash-sale')
   }
 }
 
 onMounted(() => {
-  loadCouponData()
+  loadDiscountCoupons()
+  loadFlashSaleData()
 })
 </script>
 
 <style scoped>
-.coupon-form {
+.flash-sale-form {
   height: 100%;
 }
 
@@ -553,9 +495,34 @@ onMounted(() => {
   max-width: 800px;
 }
 
-.unit {
-  margin-left: 10px;
+.form-tip {
+  margin-top: 8px;
+  font-size: 12px;
   color: #909399;
+}
+
+.no-coupon-tip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 15px;
+  background-color: #fdf6ec;
+  border: 1px solid #faecd8;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #e6a23c;
+  max-width: 300px;
+}
+
+.coupon-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.coupon-name {
+  margin-right: 10px;
 }
 
 .main-image-uploader :deep(.el-upload--picture-card) {
@@ -573,24 +540,7 @@ onMounted(() => {
   object-fit: cover;
 }
 
-.content-images-uploader :deep(.el-upload--picture-card) {
-  width: 100px;
-  height: 100px;
-  line-height: 100px;
-}
-
-.content-images-uploader :deep(.el-upload-list--picture-card .el-upload-list__item) {
-  width: 100px;
-  height: 100px;
-}
-
 .el-upload__tip {
-  margin-top: 8px;
-  font-size: 12px;
-  color: #909399;
-}
-
-.form-tip {
   margin-top: 8px;
   font-size: 12px;
   color: #909399;

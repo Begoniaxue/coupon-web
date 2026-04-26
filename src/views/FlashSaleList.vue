@@ -1,12 +1,12 @@
 <template>
-  <div class="coupon-list">
+  <div class="flash-sale-list">
     <div class="main-content">
       <el-card class="search-card">
         <el-form :inline="true" :model="searchForm" class="search-form">
-          <el-form-item label="卡券名称">
+          <el-form-item label="活动标题">
             <el-input
-              v-model="searchForm.name"
-              placeholder="请输入卡券名称"
+              v-model="searchForm.title"
+              placeholder="请输入活动标题"
               clearable
               style="width: 200px"
               @keyup.enter="handleSearch"
@@ -19,8 +19,12 @@
               clearable
               style="width: 150px"
             >
-              <el-option label="上架" :value="1" />
-              <el-option label="下架" :value="0" />
+              <el-option
+                v-for="item in flashSaleStore.statusMap"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
             </el-select>
           </el-form-item>
           <el-form-item>
@@ -39,51 +43,37 @@
       <el-card class="table-card">
         <template #header>
           <div class="card-header">
-            <span>卡券列表</span>
-            <div class="header-actions">
-              <el-button type="primary" @click="handleCreate">
-                <el-icon><Plus /></el-icon>
-                新建卡券
-              </el-button>
-            </div>
+            <span>秒杀活动列表</span>
+            <el-button type="primary" @click="handleCreate">
+              <el-icon><Plus /></el-icon>
+              新建活动
+            </el-button>
           </div>
         </template>
 
         <el-table
-          v-loading="couponStore.loading"
-          :data="couponStore.couponList"
+          v-loading="flashSaleStore.loading"
+          :data="flashSaleStore.flashSaleList"
           stripe
           style="width: 100%"
         >
           <el-table-column prop="id" label="ID" width="80" />
-          <el-table-column prop="name" label="卡券名称" min-width="180">
+          <el-table-column prop="title" label="活动标题" min-width="200">
             <template #default="{ row }">
-              <div class="name-cell">
+              <div class="title-cell">
                 <el-avatar :size="40" :src="row.mainImage">
                   <el-icon><Picture /></el-icon>
                 </el-avatar>
-                <div class="name-info">
-                  <div class="name-text">{{ row.name }}</div>
-                  <div class="name-code">{{ row.code }}</div>
+                <div class="title-info">
+                  <div class="title-text">{{ row.title }}</div>
+                  <div class="subtitle-text">{{ row.subtitle }}</div>
                 </div>
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="type" label="类型" width="100">
+          <el-table-column prop="couponName" label="关联卡券" width="150">
             <template #default="{ row }">
-              <el-tag :type="row.type === 1 ? 'primary' : 'warning'">
-                {{ couponStore.getTypeInfo(row.type).label }}
-              </el-tag>
-            </template>
-          </el-table-column>
-          <el-table-column prop="value" label="面值" width="120">
-            <template #default="{ row }">
-              <span class="value-text">
-                {{ row.type === 1 ? `￥${row.value}` : `${row.value}折` }}
-              </span>
-              <div v-if="row.minAmount > 0" class="min-amount">
-                满{{ row.minAmount }}可用
-              </div>
+              <el-tag type="warning" size="small">{{ row.couponName }}</el-tag>
             </template>
           </el-table-column>
           <el-table-column prop="projectName" label="关联项目" width="130">
@@ -96,45 +86,28 @@
           </el-table-column>
           <el-table-column prop="status" label="状态" width="100">
             <template #default="{ row }">
-              <el-tag :type="couponStore.getStatusInfo(row.status).type">
-                {{ couponStore.getStatusInfo(row.status).label }}
+              <el-tag :type="flashSaleStore.getStatusInfo(row.status).type">
+                {{ flashSaleStore.getStatusInfo(row.status).label }}
               </el-tag>
             </template>
           </el-table-column>
-          <el-table-column prop="weight" label="权重" width="100">
+          <el-table-column prop="startTime" label="活动时间" min-width="250">
             <template #default="{ row }">
-              <el-input-number
-                v-model="row.weight"
-                :min="0"
-                :max="100"
-                size="small"
-                @change="(val) => handleWeightChange(row.id, val)"
-              />
-            </template>
-          </el-table-column>
-          <el-table-column prop="quantity" label="库存/已用" width="120">
-            <template #default="{ row }">
-              <span>{{ row.usedQuantity }} / {{ row.quantity }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="endTime" label="有效期" min-width="180">
-            <template #default="{ row }">
-              <div class="validity">
-                <div>{{ row.startTime }}</div>
-                <div class="arrow">至</div>
-                <div>{{ row.endTime }}</div>
+              <div class="time-range">
+                <div class="time-item">
+                  <span class="time-label">开始:</span>
+                  <span>{{ row.startTime }}</span>
+                </div>
+                <div class="time-item">
+                  <span class="time-label">结束:</span>
+                  <span>{{ row.endTime }}</span>
+                </div>
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="操作" fixed="right" width="250">
+          <el-table-column prop="createTime" label="创建时间" width="180" />
+          <el-table-column label="操作" fixed="right" width="200">
             <template #default="{ row }">
-              <el-button
-                :type="row.status === 1 ? 'warning' : 'success'"
-                size="small"
-                @click="handleToggleStatus(row)"
-              >
-                {{ row.status === 1 ? '下架' : '上架' }}
-              </el-button>
               <el-button type="primary" size="small" @click="handleDetail(row)">
                 详情
               </el-button>
@@ -152,7 +125,7 @@
           v-model:current-page="pagination.page"
           v-model:page-size="pagination.pageSize"
           :page-sizes="[10, 20, 50, 100]"
-          :total="couponStore.total"
+          :total="flashSaleStore.total"
           layout="total, sizes, prev, pager, next, jumper"
           class="pagination"
           @size-change="handleSizeChange"
@@ -207,20 +180,20 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useCouponStore } from '@/stores/coupon'
+import { useFlashSaleStore } from '@/stores/flashSale'
 import { useProjectStore } from '@/stores/project'
 import { ElMessageBox, ElMessage } from 'element-plus'
 
 const router = useRouter()
-const couponStore = useCouponStore()
+const flashSaleStore = useFlashSaleStore()
 const projectStore = useProjectStore()
 
 const projectTreeRef = ref(null)
 
 const searchForm = ref({
-  name: '',
+  title: '',
   status: '',
   projectIds: []
 })
@@ -260,7 +233,7 @@ const projectTreeData = computed(() => {
 })
 
 const fetchData = () => {
-  couponStore.fetchCouponList({
+  flashSaleStore.fetchFlashSaleList({
     ...searchForm.value,
     projectIds: selectedProjectIds.value,
     page: pagination.value.page,
@@ -275,7 +248,7 @@ const handleSearch = () => {
 
 const handleReset = () => {
   searchForm.value = {
-    name: '',
+    title: '',
     status: '',
     projectIds: []
   }
@@ -300,32 +273,36 @@ const handleProjectCheck = (data, checkedNodes) => {
   handleSearch()
 }
 
+const loadProjects = async () => {
+  await projectStore.fetchAllProjects()
+}
+
 const handleCreate = () => {
   if (selectedProjectIds.value.length === 0) {
-    ElMessage.warning('创建卡券时必须选择一个项目，请在右侧树形筛选中选择一个项目')
+    ElMessage.warning('创建秒杀活动时必须选择一个项目，请在右侧树形筛选中选择一个项目')
     return
   }
   if (selectedProjectIds.value.length > 1) {
-    ElMessage.warning('创建卡券时仅能选择一个项目，请先取消部分选中')
+    ElMessage.warning('创建秒杀活动时仅能选择一个项目，请先取消部分选中')
     return
   }
   router.push({
-    path: '/create',
+    path: '/flash-sale/create',
     query: { projectId: selectedProjectIds.value[0] }
   })
 }
 
 const handleDetail = (row) => {
-  router.push(`/detail/${row.id}`)
+  router.push(`/flash-sale/detail/${row.id}`)
 }
 
 const handleEdit = (row) => {
-  router.push(`/edit/${row.id}`)
+  router.push(`/flash-sale/edit/${row.id}`)
 }
 
 const handleDelete = (row) => {
   ElMessageBox.confirm(
-    `确定要删除卡券"${row.name}"吗？`,
+    `确定要删除秒杀活动"${row.title}"吗？`,
     '提示',
     {
       confirmButtonText: '确定',
@@ -333,37 +310,11 @@ const handleDelete = (row) => {
       type: 'warning'
     }
   ).then(() => {
-    couponStore.removeCoupon(row.id).then(() => {
+    flashSaleStore.removeFlashSale(row.id).then(() => {
       ElMessage.success('删除成功')
       fetchData()
     })
   }).catch(() => {})
-}
-
-const handleToggleStatus = (row) => {
-  const newStatus = row.status === 1 ? 0 : 1
-  const action = newStatus === 1 ? '上架' : '下架'
-  ElMessageBox.confirm(
-    `确定要${action}卡券"${row.name}"吗？`,
-    '提示',
-    {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning'
-    }
-  ).then(() => {
-    couponStore.toggleStatus(row.id, newStatus).then((res) => {
-      ElMessage.success(res.message)
-      fetchData()
-    })
-  }).catch(() => {})
-}
-
-const handleWeightChange = (id, weight) => {
-  couponStore.changeWeight(id, weight).then((res) => {
-    ElMessage.success(res.message)
-    fetchData()
-  })
 }
 
 const handleSizeChange = (size) => {
@@ -376,10 +327,6 @@ const handleCurrentChange = (page) => {
   fetchData()
 }
 
-const loadProjects = async () => {
-  await projectStore.fetchAllProjects()
-}
-
 onMounted(() => {
   loadProjects()
   fetchData()
@@ -387,7 +334,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.coupon-list {
+.flash-sale-list {
   height: 100%;
   display: flex;
   gap: 20px;
@@ -429,41 +376,35 @@ onMounted(() => {
   align-items: center;
 }
 
-.name-cell {
+.title-cell {
   display: flex;
   align-items: center;
 }
 
-.name-info {
+.title-info {
   margin-left: 10px;
 }
 
-.name-text {
+.title-text {
   font-weight: 500;
   color: #303133;
 }
 
-.name-code {
+.subtitle-text {
   font-size: 12px;
   color: #909399;
+  margin-top: 2px;
 }
 
-.value-text {
-  font-weight: bold;
-  color: #f56c6c;
-}
-
-.min-amount {
-  font-size: 12px;
-  color: #909399;
-}
-
-.validity {
+.time-range {
   font-size: 12px;
 }
 
-.validity .arrow {
+.time-item {
   margin: 2px 0;
+}
+
+.time-label {
   color: #909399;
 }
 

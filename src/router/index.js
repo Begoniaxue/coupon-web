@@ -24,6 +24,54 @@ const routes = [
     name: 'CouponDetail',
     component: () => import('@/views/CouponDetail.vue'),
     meta: { title: '卡券详情' }
+  },
+  {
+    path: '/flash-sale',
+    name: 'FlashSaleList',
+    component: () => import('@/views/FlashSaleList.vue'),
+    meta: { title: '秒杀活动列表' }
+  },
+  {
+    path: '/flash-sale/create',
+    name: 'FlashSaleCreate',
+    component: () => import('@/views/FlashSaleForm.vue'),
+    meta: { title: '创建秒杀活动' }
+  },
+  {
+    path: '/flash-sale/edit/:id',
+    name: 'FlashSaleEdit',
+    component: () => import('@/views/FlashSaleForm.vue'),
+    meta: { title: '编辑秒杀活动' }
+  },
+  {
+    path: '/flash-sale/detail/:id',
+    name: 'FlashSaleDetail',
+    component: () => import('@/views/FlashSaleDetail.vue'),
+    meta: { title: '秒杀活动详情' }
+  },
+  {
+    path: '/project',
+    name: 'ProjectList',
+    component: () => import('@/views/ProjectList.vue'),
+    meta: { title: '项目列表' }
+  },
+  {
+    path: '/project/create',
+    name: 'ProjectCreate',
+    component: () => import('@/views/ProjectForm.vue'),
+    meta: { title: '创建项目' }
+  },
+  {
+    path: '/project/edit/:id',
+    name: 'ProjectEdit',
+    component: () => import('@/views/ProjectForm.vue'),
+    meta: { title: '编辑项目' }
+  },
+  {
+    path: '/project/detail/:id',
+    name: 'ProjectDetail',
+    component: () => import('@/views/ProjectDetail.vue'),
+    meta: { title: '项目详情' }
   }
 ]
 

@@ -7,7 +7,8 @@ import {
   updateCoupon,
   deleteCoupon,
   updateCouponStatus,
-  updateCouponWeight
+  updateCouponWeight,
+  getDiscountCouponList
 } from '@/api/coupon'
 
 export const useCouponStore = defineStore('coupon', () => {
@@ -88,6 +89,16 @@ export const useCouponStore = defineStore('coupon', () => {
     return res
   }
 
+  const fetchDiscountCouponList = async () => {
+    loading.value = true
+    try {
+      const res = await getDiscountCouponList()
+      return res.data.list
+    } finally {
+      loading.value = false
+    }
+  }
+
   return {
     couponList,
     currentCoupon,
@@ -103,6 +114,7 @@ export const useCouponStore = defineStore('coupon', () => {
     editCoupon,
     removeCoupon,
     toggleStatus,
-    changeWeight
+    changeWeight,
+    fetchDiscountCouponList
   }
 })

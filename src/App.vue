@@ -27,6 +27,14 @@
             <el-icon><Plus /></el-icon>
             <span>创建卡券</span>
           </el-menu-item>
+          <el-menu-item index="/flash-sale">
+            <el-icon><Lightning /></el-icon>
+            <span>秒杀活动</span>
+          </el-menu-item>
+          <el-menu-item index="/project">
+            <el-icon><OfficeBuilding /></el-icon>
+            <span>项目管理</span>
+          </el-menu-item>
         </el-menu>
       </el-aside>
       <el-main class="app-main">

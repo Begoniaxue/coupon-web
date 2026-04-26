@@ -3,7 +3,7 @@
     <el-card v-loading="couponStore.loading">
       <template #header>
         <div class="card-header">
-          <el-button type="text" @click="handleBack">
+          <el-button type="text" class="back-btn" @click="handleBack">
             <el-icon><ArrowLeft /></el-icon>
             返回列表
           </el-button>
@@ -185,7 +185,7 @@ onMounted(() => {
   font-weight: 500;
 }
 
-.card-header .el-button {
+.card-header .back-btn {
   padding: 0;
 }
 
