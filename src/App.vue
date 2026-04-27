@@ -35,6 +35,36 @@
             <el-icon><OfficeBuilding /></el-icon>
             <span>项目管理</span>
           </el-menu-item>
+          <el-menu-item index="/budget">
+            <el-icon><Money /></el-icon>
+            <span>预算编辑</span>
+          </el-menu-item>
+          <el-sub-menu index="gis">
+            <template #title>
+              <el-icon><Location /></el-icon>
+              <span>GIS地理信息</span>
+            </template>
+            <el-menu-item index="/gis">
+              <el-icon><DataAnalysis /></el-icon>
+              <span>GIS总览</span>
+            </el-menu-item>
+            <el-menu-item index="/gis/query">
+              <el-icon><Search /></el-icon>
+              <span>地理信息查询</span>
+            </el-menu-item>
+            <el-menu-item index="/gis/analysis">
+              <el-icon><TrendCharts /></el-icon>
+              <span>空间分析</span>
+            </el-menu-item>
+            <el-menu-item index="/gis/route">
+              <el-icon><Guide /></el-icon>
+              <span>路径规划</span>
+            </el-menu-item>
+            <el-menu-item index="/gis/3d">
+              <el-icon><View /></el-icon>
+              <span>三维可视化</span>
+            </el-menu-item>
+          </el-sub-menu>
         </el-menu>
       </el-aside>
       <el-main class="app-main">

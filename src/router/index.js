@@ -72,6 +72,48 @@ const routes = [
     name: 'ProjectDetail',
     component: () => import('@/views/ProjectDetail.vue'),
     meta: { title: '项目详情' }
+  },
+  {
+    path: '/gis',
+    name: 'GisDashboard',
+    component: () => import('@/views/GisDashboard.vue'),
+    meta: { title: 'GIS地理信息系统' }
+  },
+  {
+    path: '/gis/query',
+    name: 'GisQuery',
+    component: () => import('@/views/GisQuery.vue'),
+    meta: { title: '地理信息查询' }
+  },
+  {
+    path: '/gis/analysis',
+    name: 'GisAnalysis',
+    component: () => import('@/views/GisAnalysis.vue'),
+    meta: { title: '空间分析' }
+  },
+  {
+    path: '/gis/route',
+    name: 'GisRoute',
+    component: () => import('@/views/GisRoute.vue'),
+    meta: { title: '路径规划' }
+  },
+  {
+    path: '/gis/3d',
+    name: 'Gis3D',
+    component: () => import('@/views/Gis3D.vue'),
+    meta: { title: '三维可视化' }
+  },
+  {
+    path: '/test-map',
+    name: 'TestMap',
+    component: () => import('@/views/TestMap.vue'),
+    meta: { title: '地图测试' }
+  },
+  {
+    path: '/budget',
+    name: 'BudgetEdit',
+    component: () => import('@/views/BudgetEdit.vue'),
+    meta: { title: '预算编辑' }
   }
 ]
 
