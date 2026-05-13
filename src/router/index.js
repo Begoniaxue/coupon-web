@@ -72,6 +72,18 @@ const routes = [
     name: 'ProjectDetail',
     component: () => import('@/views/ProjectDetail.vue'),
     meta: { title: '项目详情' }
+  },
+  {
+    path: '/budget',
+    name: 'BudgetEdit',
+    component: () => import('@/views/BudgetEdit.vue'),
+    meta: { title: '预算编辑' }
+  },
+  {
+    path: '/schema-form-demo',
+    name: 'SchemaFormDemo',
+    component: () => import('@/views/SchemaFormDemo.vue'),
+    meta: { title: 'Schema 表单演示' }
   }
 ]
 
