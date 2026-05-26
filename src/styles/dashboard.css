@@ -1,0 +1,136 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap');
+
+.dashboard-theme {
+  --primary-color: #00b4ff;
+  --secondary-color: #00ffff;
+  --success-color: #67c23a;
+  --warning-color: #e6a23c;
+  --danger-color: #f56c6c;
+  --info-color: #909399;
+
+  --bg-dark: #0a1628;
+  --bg-darker: #050d1a;
+  --bg-panel: rgba(10, 30, 50, 0.9);
+  --bg-panel-hover: rgba(0, 180, 255, 0.1);
+
+  --border-color: rgba(0, 180, 255, 0.3);
+  --border-color-light: rgba(0, 180, 255, 0.1);
+
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-tertiary: rgba(255, 255, 255, 0.5);
+
+  --font-family: 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-digital: 'Orbitron', 'DS-Digital', 'Monaco', 'Consolas', monospace;
+
+  --shadow-glow: 0 0 20px rgba(0, 180, 255, 0.3);
+  --shadow-glow-strong: 0 0 30px rgba(0, 180, 255, 0.5);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.starfield {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+  overflow: hidden;
+  z-index: -1;
+}
+
+.starfield::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 180, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 180, 255, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  animation: gridMove 20s linear infinite;
+}
+
+@keyframes gridMove {
+  0% { background-position: 0 0; }
+  100% { background-position: 50px 50px; }
+}
+
+.starfield .stars {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: white;
+  box-shadow:
+    100px 50px white, 200px 150px white, 300px 80px white,
+    400px 200px white, 500px 30px white, 600px 180px white,
+    700px 100px white, 800px 250px white, 900px 70px white,
+    1000px 160px white, 1100px 40px white, 1200px 220px white,
+    150px 350px white, 350px 450px white, 550px 380px white,
+    750px 500px white, 950px 420px white, 1150px 550px white,
+    50px 600px white, 250px 700px white, 450px 650px white,
+    650px 750px white, 850px 680px white, 1050px 800px white;
+  animation: twinkle 3s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.scanline {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0, 180, 255, 0.5), transparent);
+  animation: scanline 3s linear infinite;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+:deep(.el-button) {
+  font-family: var(--font-family);
+}
+
+:deep(.el-badge__content) {
+  font-family: var(--font-family-digital);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 180, 255, 0.3);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 180, 255, 0.5);
+}
+
+::selection {
+  background: rgba(0, 180, 255, 0.3);
+  color: #fff;
+}

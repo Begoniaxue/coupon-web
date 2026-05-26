@@ -1,5 +1,5 @@
 <template>
-  <el-container class="app-container">
+  <el-container class="app-container" v-if="!isDashboardRoute">
     <el-header class="app-header">
       <div class="logo">
         <el-icon><Ticket /></el-icon>
@@ -35,6 +35,18 @@
             <el-icon><OfficeBuilding /></el-icon>
             <span>项目管理</span>
           </el-menu-item>
+          <el-menu-item index="/budget">
+            <el-icon><DataAnalysis /></el-icon>
+            <span>预算编辑</span>
+          </el-menu-item>
+          <el-menu-item index="/dashboard">
+            <el-icon><DataLine /></el-icon>
+            <span>数据大屏</span>
+          </el-menu-item>
+          <el-menu-item index="/task">
+            <el-icon><List /></el-icon>
+            <span>任务管理</span>
+          </el-menu-item>
         </el-menu>
       </el-aside>
       <el-main class="app-main">
@@ -42,16 +54,22 @@
       </el-main>
     </el-container>
   </el-container>
+  <router-view v-else />
 </template>
 
 <script setup>
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { DataAnalysis, DataLine, List } from '@element-plus/icons-vue'
 
 const route = useRoute()
 
 const activeMenu = computed(() => {
   return route.path
+})
+
+const isDashboardRoute = computed(() => {
+  return route.path === '/dashboard'
 })
 </script>
 

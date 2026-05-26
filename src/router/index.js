@@ -84,6 +84,24 @@ const routes = [
     name: 'SchemaFormDemo',
     component: () => import('@/views/SchemaFormDemo.vue'),
     meta: { title: 'Schema 表单演示' }
+  },
+  {
+    path: '/spreadsheet',
+    name: 'Spreadsheet',
+    component: () => import('@/spreadsheet/components/SpreadsheetDemo.vue'),
+    meta: { title: '类 Excel 在线表格' }
+  },
+  {
+    path: '/dashboard',
+    name: 'DataDashboard',
+    component: () => import('@/views/DataDashboard.vue'),
+    meta: { title: '数据可视化大屏' }
+  },
+  {
+    path: '/task',
+    name: 'TaskList',
+    component: () => import('@/views/TaskList.vue'),
+    meta: { title: '任务管理' }
   }
 ]
 

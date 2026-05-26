@@ -1,0 +1,12 @@
+export { useSpreadsheetStore } from './store/spreadsheetStore'
+export { CanvasRenderer } from './engine/CanvasRenderer'
+export { parseFormula, calculateCell, recalculateAll } from './formula/FormulaParser'
+export { workerManager } from './workers/WorkerManager'
+export { exportToCSV, exportToExcel, copyToClipboard, pasteFromClipboard } from './utils/exportUtils'
+export * from './utils/cellUtils'
+export * from './types'
+
+export { default as Spreadsheet } from './components/Spreadsheet.vue'
+export { default as SpreadsheetDemo } from './components/SpreadsheetDemo.vue'
+export { default as Toolbar } from './components/Toolbar.vue'
+export { default as ChartRenderer } from './components/ChartRenderer.vue'
