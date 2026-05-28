@@ -1,13 +1,12 @@
 import { ref, onUnmounted } from 'vue'
 
 export function useDataPolling(fetchFn, interval = 5000, options = {}) {
-  const data = ref(null)
+  const { immediate = true, onSuccess, onError, initialValue = null } = options
+  const data = ref(initialValue)
   const loading = ref(false)
   const error = ref(null)
   const isPolling = ref(false)
   let timer = null
-
-  const { immediate = true, onSuccess, onError } = options
 
   const fetchData = async () => {
     loading.value = true

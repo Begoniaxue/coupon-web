@@ -425,25 +425,25 @@ const realtimeData = reactive({
 const wsConnected = ref(false)
 
 const { data: trendData, loading: trendLoading, error: trendError, fetchData: loadTrendData, start: startTrendPolling, stop: stopTrendPolling } =
-  useDataPolling(() => mockApi.getTrendData(), 10000, { immediate: false })
+  useDataPolling(() => mockApi.getTrendData(), 10000, { immediate: false, initialValue: [] })
 
 const { data: barData, loading: barLoading, error: barError, fetchData: loadBarData, start: startBarPolling, stop: stopBarPolling } =
-  useDataPolling(() => mockApi.getBarData(), 15000, { immediate: false })
+  useDataPolling(() => mockApi.getBarData(), 15000, { immediate: false, initialValue: [] })
 
 const { data: pieData, loading: pieLoading, error: pieError, fetchData: loadPieData, start: startPiePolling, stop: stopPiePolling } =
-  useDataPolling(() => mockApi.getPieData(), 20000, { immediate: false })
+  useDataPolling(() => mockApi.getPieData(), 20000, { immediate: false, initialValue: [] })
 
 const { data: radarData, loading: radarLoading, error: radarError, fetchData: loadRadarData, start: startRadarPolling, stop: stopRadarPolling } =
-  useDataPolling(() => mockApi.getRadarData(), 25000, { immediate: false })
+  useDataPolling(() => mockApi.getRadarData(), 25000, { immediate: false, initialValue: [] })
 
 const { data: gaugeData, loading: gaugeLoading, error: gaugeError, fetchData: loadGaugeData, start: startGaugePolling, stop: stopGaugePolling } =
-  useDataPolling(() => mockApi.getGaugeData(), 5000, { immediate: false })
+  useDataPolling(() => mockApi.getGaugeData(), 5000, { immediate: false, initialValue: { cpu: 0, memory: 0 } })
 
 const { data: progressData, loading: progressLoading, fetchData: loadProgressData, start: startProgressPolling, stop: stopProgressPolling } =
-  useDataPolling(() => mockApi.getProgressData(), 12000, { immediate: false })
+  useDataPolling(() => mockApi.getProgressData(), 12000, { immediate: false, initialValue: [] })
 
 const { data: alertData, loading: alertLoading, fetchData: loadAlertData, start: startAlertPolling, stop: stopAlertPolling } =
-  useDataPolling(() => mockApi.getAlertList(), 8000, { immediate: false })
+  useDataPolling(() => mockApi.getAlertList(), 8000, { immediate: false, initialValue: [] })
 
 const mapData = ref([])
 const mapLoading = ref(false)

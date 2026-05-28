@@ -47,6 +47,10 @@
             <el-icon><List /></el-icon>
             <span>任务管理</span>
           </el-menu-item>
+          <el-menu-item index="/currency-converter">
+            <el-icon><Money /></el-icon>
+            <span>汇率换算</span>
+          </el-menu-item>
         </el-menu>
       </el-aside>
       <el-main class="app-main">
@@ -60,7 +64,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { DataAnalysis, DataLine, List } from '@element-plus/icons-vue'
+import { DataAnalysis, DataLine, List, Money } from '@element-plus/icons-vue'
 
 const route = useRoute()
 
@@ -86,7 +90,12 @@ html, body, #app {
 }
 
 .app-container {
-  height: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.app-container > .el-container {
+  height: calc(100vh - 60px);
 }
 
 .app-header {
@@ -96,6 +105,8 @@ html, body, #app {
   background-color: #304156;
   color: #fff;
   padding: 0 20px;
+  height: 60px;
+  flex-shrink: 0;
 }
 
 .logo {
@@ -122,6 +133,9 @@ html, body, #app {
 
 .app-aside {
   background-color: #304156;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .el-menu {
@@ -131,5 +145,8 @@ html, body, #app {
 .app-main {
   background-color: #f0f2f5;
   padding: 20px;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 </style>

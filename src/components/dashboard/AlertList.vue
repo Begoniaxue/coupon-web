@@ -46,10 +46,10 @@ const props = defineProps({
 const listRef = ref(null)
 
 const unreadCount = computed(() => {
-  return props.data.filter(d => d.type === 'error' || d.type === 'warning').length
+  return (props.data || []).filter(d => d.type === 'error' || d.type === 'warning').length
 })
 
-watch(() => props.data.length, () => {
+watch(() => props.data?.length ?? 0, () => {
   nextTick(() => {
     if (listRef.value) {
       listRef.value.scrollTop = 0

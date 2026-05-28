@@ -102,6 +102,12 @@ const routes = [
     name: 'TaskList',
     component: () => import('@/views/TaskList.vue'),
     meta: { title: '任务管理' }
+  },
+  {
+    path: '/currency-converter',
+    name: 'CurrencyConverter',
+    component: () => import('@/views/CurrencyConverter.vue'),
+    meta: { title: '汇率换算工具' }
   }
 ]
 
