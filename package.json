@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:all": "npm run server & npm run dev",
+    "server": "cd server && npm install && node server.js",
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest",

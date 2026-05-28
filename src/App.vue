@@ -1,13 +1,26 @@
 <template>
-  <el-container class="app-container" v-if="!isDashboardRoute">
+  <el-container class="app-container" v-if="!isDashboardRoute && isLoggedIn">
     <el-header class="app-header">
       <div class="logo">
         <el-icon><Ticket /></el-icon>
         <span>卡券管理平台</span>
       </div>
       <div class="user-info">
-        <el-icon><User /></el-icon>
-        <span>管理员</span>
+        <el-dropdown @command="handleCommand">
+          <span class="user-dropdown">
+            <el-icon><User /></el-icon>
+            <span>{{ userName }}</span>
+            <el-icon class="arrow-icon"><ArrowDown /></el-icon>
+          </span>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item command="logout">
+                <el-icon><SwitchButton /></el-icon>
+                退出登录
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
       </div>
     </el-header>
     <el-container>
@@ -63,10 +76,14 @@
 
 <script setup>
 import { computed } from 'vue'
-import { useRoute } from 'vue-router'
-import { DataAnalysis, DataLine, List, Money } from '@element-plus/icons-vue'
+import { useRouter, useRoute } from 'vue-router'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { DataAnalysis, DataLine, List, Money, User, Ticket, ArrowDown, SwitchButton } from '@element-plus/icons-vue'
+import { useAuthStore } from '@/stores/auth'
 
+const router = useRouter()
 const route = useRoute()
+const authStore = useAuthStore()
 
 const activeMenu = computed(() => {
   return route.path
@@ -75,6 +92,33 @@ const activeMenu = computed(() => {
 const isDashboardRoute = computed(() => {
   return route.path === '/dashboard'
 })
+
+const isLoggedIn = computed(() => {
+  return authStore.isLoggedIn
+})
+
+const userName = computed(() => {
+  return authStore.userName
+})
+
+const handleCommand = async (command) => {
+  if (command === 'logout') {
+    try {
+      await ElMessageBox.confirm('确定要退出登录吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+      await authStore.logout()
+      ElMessage.success('退出登录成功')
+      router.push('/login')
+    } catch (error) {
+      if (error !== 'cancel') {
+        console.error('退出登录失败:', error)
+      }
+    }
+  }
+}
 </script>
 
 <style>
@@ -127,8 +171,27 @@ html, body, #app {
   font-size: 14px;
 }
 
-.user-info .el-icon {
+.user-dropdown {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.user-dropdown:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.user-dropdown .el-icon {
   margin-right: 8px;
+}
+
+.user-dropdown .arrow-icon {
+  margin-left: 4px;
+  margin-right: 0;
+  font-size: 12px;
 }
 
 .app-aside {

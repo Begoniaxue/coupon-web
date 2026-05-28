@@ -1,6 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 
 const routes = [
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import('@/views/Login.vue'),
+    meta: { title: '登录', requiresAuth: false }
+  },
   {
     path: '/',
     name: 'CouponList',
@@ -118,7 +125,17 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   document.title = to.meta.title || '卡券管理平台'
-  next()
+  
+  const authStore = useAuthStore()
+  const requiresAuth = to.meta.requiresAuth !== false
+  
+  if (requiresAuth && !authStore.isLoggedIn) {
+    next('/login')
+  } else if (to.path === '/login' && authStore.isLoggedIn) {
+    next('/')
+  } else {
+    next()
+  }
 })
 
 export default router
